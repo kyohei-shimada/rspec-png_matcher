@@ -6,8 +6,7 @@ require 'forwardable'
 module RSpec
   class PngImage
     extend Forwardable
-
-    def_delegators :@image, :==, :eql?
+    def_delegators :@image, :pixels, :width, :height
 
     def initialize(input)
       @image = case input
@@ -18,6 +17,11 @@ module RSpec
       else
         ChunkyPNG::Image.from_file(input.to_s)
       end
+    end
+
+    def ==(other)
+      other.kind_of?(self.class) && other.pixels == self.pixels &&
+        other.width == self.width && other.height == self.height
     end
   end
 end
